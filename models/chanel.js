@@ -11,6 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Chanel.belongsToMany(models.Chanel, {
+        as:'chanels',
+        foreignKey:'subscriberId',
+        through:'subscribes'
+      });
+
+      Chanel.belongsToMany(models.Chanel, {
+        as:'subscribers',
+        foreignKey:'chanelId',
+        through:'subscribes'
+      });
     }
   };
   Chanel.init({
