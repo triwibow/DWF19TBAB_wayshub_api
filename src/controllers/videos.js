@@ -5,7 +5,6 @@ const {
 } = require('../../models');
 
 const Joi = require('joi');
-const bcrypt = require('bcrypt');
 const { moveFile, deleteFile } = require('../helper/file');
 
 const getVideos = async (req, res) => {
@@ -74,6 +73,13 @@ const getVideoById = async (req, res) => {
             ]
 
         });
+
+        if(!video){
+            return res.status(400).send({
+                status: "error",
+                messages: "Resource not found"
+            });
+        }
 
         res.send({
             status: "success",

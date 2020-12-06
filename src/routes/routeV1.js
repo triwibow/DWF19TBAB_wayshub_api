@@ -21,6 +21,14 @@ const {
     deleteVideo
 } = require('../controllers/videos');
 
+const {
+    getCommentsByVideo,
+    getDetailComment,
+    addComment,
+    editComment,
+    deleteComment
+} = require('../controllers/comments');
+
 // register
 router.post('/register', register);
 
@@ -39,5 +47,12 @@ router.get('/video/:id', getVideoById);
 router.post('/video', auth, upload(["thumbnail", "video"]), addVideo);
 router.put('/video/:videoId', auth, upload(["thumbnail", "video"]), editVideo);
 router.delete('/video/:videoId', auth, deleteVideo);
+
+// comments
+router.get('/video/:videoId/comments', getCommentsByVideo);
+router.get('/video/:videoId/comment/:commentId', getDetailComment);
+router.post('/video/:videoId/comment', auth, addComment);
+router.put('/video/:videoId/comment/:commentId', auth, editComment);
+router.delete('/video/:videoId/comment/:commentId', auth, deleteComment);
 
 module.exports = router;
