@@ -32,8 +32,8 @@ const {
 const {
     addSubscribe,
     unSubscribe,
-    getSubscribers
-} = require('../controllers/subsribes');
+    getSubscribtion
+} = require('../controllers/subscribes');
 
 // register
 router.post('/register', register);
@@ -64,6 +64,6 @@ router.delete('/video/:videoId/comment/:commentId', auth, deleteComment);
 // subscribe
 router.post('/subscribe', auth, addSubscribe);
 router.delete('/subscribe/:chanelId', auth, unSubscribe);
-router.get('/subscribe', auth, getSubscribers);
+router.get('/subscribe', auth, getSubscribtion);
 
 module.exports = router;

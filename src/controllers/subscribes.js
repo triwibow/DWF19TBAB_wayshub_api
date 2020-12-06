@@ -2,8 +2,11 @@ const {
     Chanel,
     Subscribe,
     Video,
-    Comment
+    Comment,
+    sequelize
 } = require('../../models');
+
+const { QueryTypes } = require('sequelize');
 
 const Joi = require('joi');
 
@@ -148,29 +151,20 @@ const unSubscribe = async (req, res) => {
     }
 }
 
-const getSubscribers = async (req, res) => {
+const getSubscribtion = async (req, res) => {
     try {
         const { id } = req.user;
-        const subscribtion = await Chanel.findOne({
-            where: {
-                id
-            },
-            attributes: {
-                exclude: ['createdAt', 'updatedAt', 'password', 'chanelName', 'thumbnail', 'photo', 'id', 'email', 'description']
-            },
-            include: {
-                model: Chanel,
-                as: 'subscribers',
-                through: {
-                    attributes : []
-                },
-                attributes: {
-                    exclude: ['createdAt', 'updatedAt', 'password']
-                }
-            }
-        });
 
-        if(!subscribtion){
+        const subscribtion = await sequelize.query(
+            `SELECT title, videos.thumbnail, videos.description, video, videos.createdAt, viewCount FROM videos LEFT JOIN chanels on chanels.id = videos.chanelId LEFT JOIN subscribes on subscribes.chanelId = chanels.id WHERE subscribes.subscriberId = ${id}`,
+            {
+              replacements: { status: 'active' },
+              type: QueryTypes.SELECT
+            }
+        );
+
+
+        if(subscribtion.length === 0){
             return res.status(400).send({
                 status: 'error',
                 error: {
@@ -179,20 +173,11 @@ const getSubscribers = async (req, res) => {
             });
         }
 
-        if(subscribtion.subscribers.length === 0){
-            return res.status(400).send({
-                status: 'error',
-                error: {
-                    message: "Dont have subscriber"
-                }
-            });
-        }
-
 
         res.send({
             status: "success",
             data : {
-                subscribtion: subscribtion.subscribers,
+                subscribtion
             }
         });
 
@@ -208,4 +193,4 @@ const getSubscribers = async (req, res) => {
 
 exports.addSubscribe = addSubscribe;
 exports.unSubscribe = unSubscribe;
-exports.getSubscribers = getSubscribers;
+exports.getSubscribtion = getSubscribtion;
