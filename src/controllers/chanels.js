@@ -1,6 +1,8 @@
 const {
     Chanel,
-    Subscribe
+    Subscribe,
+    Video,
+    Comment
 } = require('../../models');
 
 const Joi = require('joi');
@@ -244,6 +246,18 @@ const deleteChanel = async (req, res) => {
             }
         });
 
+        const video = await Video.findAll({
+            where: {
+                chanelId: id
+            }
+        });
+
+        const videoId = [];
+
+        video.forEach(item => {
+            videoId.push(item.id);
+        });
+
         if(!chanelById){
             return res.status(400).send({
                 status: 'error',
@@ -265,6 +279,24 @@ const deleteChanel = async (req, res) => {
                 chanelId: id
             }
         });
+
+        await Comment.destroy({
+            where: {
+                id: videoId
+            }
+        });
+
+        await Comment.destroy({
+            where: {
+                chanelId: id
+            }
+        })
+
+        await Video.destroy({
+            where: {
+                chanelId: id
+            }
+        })
 
         await Chanel.destroy({
             where: {

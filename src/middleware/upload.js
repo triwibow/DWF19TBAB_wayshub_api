@@ -1,6 +1,6 @@
 const multer = require('multer');
 
-const upload = (type, fields) => {
+const upload = (fields) => {
 
     const storage = multer.diskStorage({
         destination: (req, file, cb) => {
@@ -50,7 +50,7 @@ const upload = (type, fields) => {
     }
 
 
-    const maxSixe = 10 * 1000 * 1000;
+    const maxSixe = 200 * 1000 * 1000;
 
     const doUpload = multer({
         storage,
@@ -68,16 +68,7 @@ const upload = (type, fields) => {
 
 
     return (req, res, next) => {
-        const currentUserLoginId = req.user.id;
-        const { id } = req.params;
-
-        if(currentUserLoginId != id){
-            return res.status(400).send({
-                status: "error",
-                messages: "Invalid user"
-            });
-        }
-
+        
         doUpload(req, res, (err) => {
             if(req.fileValidationError){
                 return res.status(400).send(req.fileValidationError);
@@ -94,9 +85,9 @@ const upload = (type, fields) => {
 
             if (err) {
                 if (err.code === "LIMIT_FILE_SIZE") {
-                  return res.status(400).send({
+                return res.status(400).send({
                     message: "Max file sized 10MB",
-                  });
+                });
                 }
                 return res.status(400).send(err);
             }

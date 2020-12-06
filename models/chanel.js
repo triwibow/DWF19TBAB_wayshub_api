@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'chanelId',
         through:'subscribes'
       });
+
+      Chanel.hasMany(models.Video);
+      Chanel.hasMany(models.Comment);
     }
   };
   Chanel.init({
