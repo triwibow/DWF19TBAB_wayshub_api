@@ -29,6 +29,12 @@ const {
     deleteComment
 } = require('../controllers/comments');
 
+const {
+    addSubscribe,
+    unSubscribe,
+    getSubscribers
+} = require('../controllers/subsribes');
+
 // register
 router.post('/register', register);
 
@@ -54,5 +60,10 @@ router.get('/video/:videoId/comment/:commentId', getDetailComment);
 router.post('/video/:videoId/comment', auth, addComment);
 router.put('/video/:videoId/comment/:commentId', auth, editComment);
 router.delete('/video/:videoId/comment/:commentId', auth, deleteComment);
+
+// subscribe
+router.post('/subscribe', auth, addSubscribe);
+router.delete('/subscribe/:chanelId', auth, unSubscribe);
+router.get('/subscribe', auth, getSubscribers);
 
 module.exports = router;
